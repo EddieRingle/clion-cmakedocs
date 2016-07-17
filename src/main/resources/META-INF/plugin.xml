@@ -1,0 +1,25 @@
+<idea-plugin url="https://github.com/eddieringle/clion-cmakedocs" version="2">
+    <id>io.ringle.ij.cmakedocs</id>
+    <name>CMake Docs</name>
+    <version>1.0.0</version>
+
+    <description><![CDATA[
+      Adds Quick Documentation support for CMake commands, modules, properties, and variables to CLion.
+    ]]></description>
+
+    <change-notes><![CDATA[
+      Initial Release.
+    ]]>
+    </change-notes>
+
+    <idea-version since-build="141.0" />
+
+    <depends>com.intellij.modules.cidr.lang</depends>
+    <depends>com.intellij.modules.clion</depends>
+
+    <depends>org.asciidoctor.intellij.asciidoc</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <lang.documentationProvider implementationClass="CMakeDocProvider" language="CMake" order="first" />
+    </extensions>
+</idea-plugin>

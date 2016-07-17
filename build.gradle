@@ -1,0 +1,55 @@
+buildscript {
+  ext.ver = [
+      kotlin: "1.1-M01",
+  ]
+  dependencies {
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${ver.kotlin}"
+  }
+  repositories {
+    jcenter()
+    maven {
+      url "https://dl.bintray.com/kotlin/kotlin-eap-1.1"
+    }
+  }
+}
+
+apply plugin: "idea"
+apply plugin: "kotlin"
+
+repositories {
+  jcenter()
+  maven {
+    url "https://dl.bintray.com/kotlin/kotlin-eap-1.1"
+  }
+}
+
+group "io.ringle.ij"
+version "1.0.0"
+
+def clionPath = getCLionPath()
+
+dependencies {
+  compile "org.jetbrains.kotlin:kotlin-stdlib:${ver.kotlin}"
+
+  compileOnly fileTree(dir: "${clionPath}/lib", include: ["*.jar"])
+  compileOnly fileTree(dir: "lib/asciidoctor-intellij/lib", include: ["asciidoctor-intellij.jar"])
+}
+
+task(verifySetup) << {
+  def clionJar = "${clionPath}/lib/clion.jar"
+  if (!file(clionJar).exists()) {
+    throw new GradleException("${clionJar} not found, set clion.dir to valid CLion installation")
+  }
+}
+
+compileKotlin.dependsOn verifySetup
+
+def getCLionPath() {
+  Properties props = new Properties()
+  props.load(project.rootProject.file("local.properties").newDataInputStream())
+  def clionPath = props.getProperty("clion.dir", null)
+  if (clionPath == null) {
+    throw new GradleException("CLion path not found. Define clion.dir in local.properties file.")
+  }
+  return clionPath
+}
