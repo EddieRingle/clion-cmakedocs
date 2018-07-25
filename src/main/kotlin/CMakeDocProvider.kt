@@ -3,10 +3,11 @@ import com.intellij.notification.Notification
 import com.intellij.notification.NotificationType
 import com.intellij.notification.Notifications
 import com.intellij.psi.PsiElement
-import com.jetbrains.cidr.cpp.CPPToolchains
-import com.jetbrains.cidr.cpp.cmake.psi.CMakeCommandName
-import com.jetbrains.cidr.cpp.cmake.psi.CMakeElement
-import com.jetbrains.cidr.cpp.cmake.psi.CMakeLiteral
+import com.jetbrains.cidr.cpp.toolchains.CPPToolchains
+import com.jetbrains.cidr.cpp.toolchains.CPPEnvironment
+import com.jetbrains.cmake.psi.CMakeCommandName
+import com.jetbrains.cmake.psi.CMakeElement
+import com.jetbrains.cmake.psi.CMakeLiteral
 import org.asciidoc.intellij.AsciiDoc
 import org.jetbrains.rpc.LOG
 import java.io.IOException
@@ -20,11 +21,12 @@ class CMakeDocProvider : AbstractDocumentationProvider() {
 
   private var variableList = ArrayList<String>()
 
-  private val asciiDoc by lazy { AsciiDoc(createTempDir()) }
+  private val asciiDoc by lazy { AsciiDoc(createTempDir(), null, "clion-cmakedocs") }
 
   fun runCMake(vararg args: String): Process {
-    val cmake = CPPToolchains.getInstance().cMake!!
-    LOG.info("CDP - Executing CMake: ${cmake.executablePath} ${args.joinToString(" ")}")
+    val cppEnvironment=CPPEnvironment(CPPToolchains.getInstance().getToolchainByNameOrDefault(null)!!)
+    val cmake = cppEnvironment.cMake
+    LOG.info("CDP - Executing CMake: ${cmake!!.executablePath} ${args.joinToString(" ")}")
     return ProcessBuilder(cmake.executablePath, *args).start()
   }
 
