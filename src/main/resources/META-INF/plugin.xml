@@ -12,7 +12,7 @@
     ]]>
     </change-notes>
 
-    <idea-version since-build="141.0" />
+    <idea-version since-build="143.0" />
 
     <depends>com.intellij.modules.cidr.lang</depends>
     <depends>com.intellij.modules.clion</depends>

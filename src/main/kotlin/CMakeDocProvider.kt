@@ -3,7 +3,7 @@ import com.intellij.notification.Notification
 import com.intellij.notification.NotificationType
 import com.intellij.notification.Notifications
 import com.intellij.psi.PsiElement
-import com.jetbrains.cidr.cpp.CPPToolchains
+import com.jetbrains.cidr.cpp.toolchains.CPPToolchains
 import com.jetbrains.cidr.cpp.cmake.psi.CMakeCommandName
 import com.jetbrains.cidr.cpp.cmake.psi.CMakeElement
 import com.jetbrains.cidr.cpp.cmake.psi.CMakeLiteral
@@ -20,10 +20,10 @@ class CMakeDocProvider : AbstractDocumentationProvider() {
 
   private var variableList = ArrayList<String>()
 
-  private val asciiDoc by lazy { AsciiDoc(createTempDir()) }
+  private val asciiDoc by lazy { AsciiDoc(createTempDir(), null, "clion-cmakedocs") }
 
   fun runCMake(vararg args: String): Process {
-    val cmake = CPPToolchains.getInstance().cMake!!
+    val cmake = CPPToolchains.getInstance().getToolchainByNameOrDefault(null)!!.cMake!!
     LOG.info("CDP - Executing CMake: ${cmake.executablePath} ${args.joinToString(" ")}")
     return ProcessBuilder(cmake.executablePath, *args).start()
   }
