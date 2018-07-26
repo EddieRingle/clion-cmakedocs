@@ -35,10 +35,12 @@ dependencies {
   compileOnly fileTree(dir: "lib/asciidoctor-intellij/lib", include: ["asciidoctor-intellij.jar"])
 }
 
-task(verifySetup) << {
-  def clionJar = "${clionPath}/lib/clion.jar"
-  if (!file(clionJar).exists()) {
-    throw new GradleException("${clionJar} not found, set clion.dir to valid CLion installation")
+task(verifySetup) {
+  doLast {
+    def clionJar = "${clionPath}/lib/clion.jar"
+    if (!file(clionJar).exists()) {
+      throw new GradleException("${clionJar} not found, set clion.dir to valid CLion installation")
+    }
   }
 }
 
