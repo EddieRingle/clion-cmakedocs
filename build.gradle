@@ -1,3 +1,5 @@
+import org.gradle.api.internal.artifacts.repositories.DefaultIvyArtifactRepository
+
 buildscript {
   ext.ver = [
       kotlin: "1.2.51",
@@ -8,6 +10,10 @@ buildscript {
   repositories {
     jcenter()
   }
+}
+
+plugins {
+  id "org.jetbrains.intellij" version "0.3.5"
 }
 
 apply plugin: "idea"
@@ -23,10 +29,26 @@ version "1.0.0"
 def clionPath = getCLionPath()
 
 dependencies {
-  compile "org.jetbrains.kotlin:kotlin-stdlib:${ver.kotlin}"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:${ver.kotlin}"
+  implementation "org.jetbrains.plugins:org.asciidoctor.intellij.asciidoc:0.20.6"
+}
 
-  compileOnly fileTree(dir: "${clionPath}/lib", include: ["*.jar"])
-  compileOnly fileTree(dir: "lib/asciidoctor-intellij/lib", include: ["asciidoctor-intellij.jar"])
+intellij {
+  pluginName "clion-cmakedocs"
+  plugins = ["org.asciidoctor.intellij.asciidoc:0.20.6"]
+  localPath clionPath
+  alternativeIdePath clionPath
+  ideaDependencyCachePath = file("deps").absolutePath
+  afterEvaluate {
+    project.repositories.forEach { repo ->
+      if (repo instanceof DefaultIvyArtifactRepository) {
+        if (repo.name.equals("ivy2")) {
+          repo.artifactPattern(
+              "${gradle.gradleUserHomeDir}/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/plugins.jetbrains.com/[module]-[revision]/[artifact](.[ext])")
+        }
+      }
+    }
+  }
 }
 
 task(verifySetup) {
