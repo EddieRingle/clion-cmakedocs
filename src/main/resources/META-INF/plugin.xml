@@ -2,6 +2,7 @@
     <id>io.ringle.ij.cmakedocs</id>
     <name>CMake Docs</name>
     <version>1.0.1</version>
+    <vendor>Eddie Ringle</vendor>
 
     <description><![CDATA[
       Adds Quick Documentation support for CMake commands, modules, properties, and variables to CLion.
