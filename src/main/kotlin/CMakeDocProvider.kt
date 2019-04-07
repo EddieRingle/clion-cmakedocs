@@ -21,7 +21,10 @@ class CMakeDocProvider : AbstractDocumentationProvider() {
 
   private var variableList = ArrayList<String>()
 
-  private val asciiDoc by lazy { AsciiDoc(createTempDir(), null, "clion-cmakedocs") }
+  private val asciiDoc by lazy {
+    val tmpdir = createTempDir()
+    AsciiDoc(tmpdir.absolutePath, tmpdir, null, "clion-cmakedocs")
+  }
 
   fun runCMake(vararg args: String): Process {
     val cppEnvironment = CPPEnvironment(CPPToolchains.getInstance().getToolchainByNameOrDefault(null)!!)
@@ -78,7 +81,7 @@ class CMakeDocProvider : AbstractDocumentationProvider() {
         is CMakeLiteral -> docForLiteral(element.text)
         else -> null
       }.let {
-        if (it == null) null else asciiDoc.render(it)
+        if (it == null) null else asciiDoc.render(it, emptyList())
       }
     }
   }
