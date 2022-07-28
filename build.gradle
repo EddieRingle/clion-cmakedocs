@@ -30,15 +30,16 @@ def clionPath = getCLionPath()
 
 dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib:${ver.kotlin}"
-  implementation "org.jetbrains.plugins:org.asciidoctor.intellij.asciidoc:0.20.6"
+  implementation "org.jetbrains.plugins:org.asciidoctor.intellij.asciidoc:0.24.3"
 }
 
 intellij {
   pluginName "clion-cmakedocs"
-  plugins = ["org.asciidoctor.intellij.asciidoc:0.20.6"]
+  plugins = ["org.asciidoctor.intellij.asciidoc:0.24.3"]
   localPath clionPath
   alternativeIdePath clionPath
   ideaDependencyCachePath = file("deps").absolutePath
+  intellij.updateSinceUntilBuild false
   afterEvaluate {
     project.repositories.forEach { repo ->
       if (repo instanceof DefaultIvyArtifactRepository) {
